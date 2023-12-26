@@ -17,6 +17,9 @@ void animArmed(){
 
   if(showarmed){
     _display->println("    --- ARMED ---");
+    // Circles in the top corners for attention
+    _display->fillCircle(5,5,5,WHITE);
+    _display->fillCircle(122,5,5,WHITE);
   }
   else
     _display->println("");
@@ -25,7 +28,7 @@ void animArmed(){
 long displayOn;
 void updateDisplay(){
   //Turn off after 60 secs, if not armed
-  if(millis() - displayOn > 60000 && !_armed){
+  if(millis() - displayOn > 60000 && !*_armed){
     _display->clearDisplay();
     _display->display();
     return;

@@ -6,9 +6,12 @@
 
 Adafruit_SSD1305 *_display;
 bool *_armed;
-
+int announce = -1;
 long lastarmed = millis();
 bool showarmed = false;
+long displayOn;
+
+
 void animArmed(){
   if(millis() - lastarmed > 250){
     showarmed = !showarmed;
@@ -25,7 +28,18 @@ void animArmed(){
     _display->println("");
 }
 
-long displayOn;
+void announceArming(){
+  displayOn = millis();
+  announce = 5;
+  do{
+    updateDisplay();
+    delay(1000);
+    announce--;
+  }
+  while(announce > -1);
+}
+
+
 void updateDisplay(){
   //Turn off after 60 secs, if not armed
   if(millis() - displayOn > 60000 && !*_armed){
@@ -38,10 +52,16 @@ void updateDisplay(){
   _display->setCursor(32,0);
   _display->println("FIRE SYSTEM");
   _display->setTextSize(1);
-  if(!*_armed)
+  if(!*_armed && announce == -1)
     _display->println("      TEST MODE");
-  else
+  else if(*_armed)
     animArmed();
+  else{
+    _display->printf("     ARMING IN %us\n", announce);
+    // Circles in the top corners for attention
+    _display->fillCircle(5,5,5,WHITE);
+    _display->fillCircle(122,5,5,WHITE);
+  }
   _display->print("IP: ");
   _display->println(WiFi.softAPIP());
   _display->display();

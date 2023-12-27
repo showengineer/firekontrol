@@ -6,5 +6,6 @@ void setupGraphics(bool *armed, Adafruit_SSD1305 *display);
 void updateDisplay();
 void announceArming();
 void animArmed();
+void resetDisplayTimeout();
 
 #endif

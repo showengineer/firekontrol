@@ -28,6 +28,10 @@ void animArmed(){
     _display->println("");
 }
 
+void resetDisplayTimeout(){
+  displayOn = millis();
+}
+
 void announceArming(){
   displayOn = millis();
   announce = 5;

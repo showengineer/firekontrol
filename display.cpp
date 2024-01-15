@@ -3,13 +3,14 @@
 
 #include <WiFi.h>
 #include <splash.h>
+#include "beep.h"
 
 Adafruit_SSD1305 *_display;
 bool *_armed;
 int announce = -1;
-long lastarmed = millis();
+unsigned long lastarmed = millis();
 bool showarmed = false;
-long displayOn;
+unsigned long displayOn;
 
 
 void animArmed(){
@@ -36,6 +37,7 @@ void announceArming(){
   displayOn = millis();
   announce = 5;
   do{
+    beep(50, 1);
     updateDisplay();
     delay(1000);
     announce--;

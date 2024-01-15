@@ -5,6 +5,7 @@
 #include "wireless.h"
 #include "api.h"
 #include "fire.h"
+#include "beep.h"
 
 bool armed = false;
 
@@ -15,16 +16,16 @@ WebServer* _server;
 int setArmed(bool arm){
   if(arm && !armed){
     announceArming();
-    //TODO: beep!
     outputEnable(true);
     armed = true;
+    beep(200, 3, 200);
     return 0;
   }
   else if(!arm && armed){
-    //TODO: beep!
     resetDisplayTimeout();
     outputEnable(false);
     armed = false;
+    beep(1000, 1);
     return 0;
   }
   else{
@@ -41,10 +42,14 @@ int fireChannel(int channel){
   return fire(channel);
 }
 
+
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   setupGraphics(&armed, &display);
+  pinMode(BEEP_PIN, OUTPUT);
+  beep(200, 1);
   setupHardware();
   setupWiFi();
   _server = setupAPI(&setArmed, &fireChannel);
@@ -56,4 +61,5 @@ void loop() {
   // put your main code here, to run repeatedly:
   updateDisplay();
   _server->handleClient();
+  //hardwareUpdate();
 }
